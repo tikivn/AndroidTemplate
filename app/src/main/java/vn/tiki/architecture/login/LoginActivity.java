@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -46,6 +47,7 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
   @BindString(R.string.error_wrong_password) String errorWrongPassword;
   @BindString(R.string.msg_you_are_offline) String msgYouAreOffline;
   @BindString(R.string.msg_successful) String msgSuccessful;
+  @BindColor(R.color.colorAccent) int colorAccent;
 
   @Inject LoginPresenter presenter;
 
