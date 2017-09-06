@@ -3,6 +3,7 @@ package vn.tiki.architecture;
 import android.app.Activity;
 import android.app.Application;
 import vn.tiki.architecture.di.AppComponent;
+import vn.tiki.architecture.di.AppModule;
 import vn.tiki.architecture.di.DaggerAppComponent;
 
 /**
@@ -19,6 +20,7 @@ public class App extends Application {
   @Override public void onCreate() {
     super.onCreate();
     appComponent = DaggerAppComponent.builder()
+        .appModule(new AppModule())
         .build();
   }
 

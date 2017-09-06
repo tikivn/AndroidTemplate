@@ -1,7 +1,10 @@
 package vn.tiki.architecture.login;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +27,7 @@ import javax.inject.Inject;
 import vn.tiki.architecture.App;
 import vn.tiki.architecture.R;
 import vn.tiki.architecture.mvp.MvpActivity;
+import vn.tiki.architecture.util.NetworkUtil;
 
 public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implements LoginView {
 
@@ -50,7 +54,11 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
   @BindColor(R.color.colorAccent) int colorAccent;
 
   @Inject LoginPresenter presenter;
-
+  @NonNull private final BroadcastReceiver networkStatusReceiver = new BroadcastReceiver() {
+    @Override public void onReceive(Context context, Intent intent) {
+      presenter.onNetworkStatusChanged(NetworkUtil.isConnected(context));
+    }
+  };
   @Nullable private Snackbar sbNetworkError;
 
   public static Intent intent(Context context) {
@@ -69,6 +77,18 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
         .inject(this);
 
     connect(presenter, this);
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+    registerReceiver(
+        networkStatusReceiver,
+        new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    unregisterReceiver(networkStatusReceiver);
   }
 
   @OnTextChanged(value = R.id.etEmail, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
@@ -122,14 +142,19 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
   }
 
   @Override public void showNetworkError() {
-    sbNetworkError = Snackbar.make(vRoot, msgYouAreOffline, Snackbar.LENGTH_SHORT);
+    if (sbNetworkError != null) {
+      return;
+    }
+    sbNetworkError = Snackbar.make(vRoot, msgYouAreOffline, Snackbar.LENGTH_INDEFINITE);
     sbNetworkError.show();
   }
 
   @Override public void hideNetworkError() {
-    if (sbNetworkError != null) {
-      sbNetworkError.dismiss();
+    if (sbNetworkError == null) {
+      return;
     }
+    sbNetworkError.dismiss();
+    sbNetworkError = null;
   }
 
   @Override public void enableSubmit() {
