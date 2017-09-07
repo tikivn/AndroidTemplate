@@ -74,12 +74,10 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    System.out.println("savedInstanceState = [" + savedInstanceState + "]");
     setContentView(R.layout.activity_login);
     ButterKnife.bind(this);
     Daggers.inject(this, this);
 
-    System.out.println(presenter);
     connect(presenter, this);
   }
 

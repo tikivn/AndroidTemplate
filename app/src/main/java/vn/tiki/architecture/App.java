@@ -36,7 +36,6 @@ public class App extends Application implements AppInjector {
 
     registerActivityLifecycleCallbacks(new SimpleActivityLifecycleCallbacks() {
       @Override public void onActivityCreated(Activity activity, Bundle bundle) {
-        System.out.println("activity = [" + activity + "], bundle = [" + bundle + "]");
         if (activity instanceof ActivityInjector) {
           Daggers.installActivityInjector((ActivityInjector) activity);
         }
