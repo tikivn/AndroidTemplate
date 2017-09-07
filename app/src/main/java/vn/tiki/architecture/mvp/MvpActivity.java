@@ -14,7 +14,8 @@ public class MvpActivity<V extends Mvp.View, P extends Mvp.Presenter<V>> extends
 
   /**
    * Connect Presenter to View then Presenter will attach/detach view and destroy base on lifecycle.
-   * NOTE: this must be called before {@link Activity#onResume()} method.
+   * NOTE: this must be called before {@link Activity#onStart()} method.
+   *
    * @param presenter the Presenter
    * @param view the View
    */
@@ -22,15 +23,15 @@ public class MvpActivity<V extends Mvp.View, P extends Mvp.Presenter<V>> extends
     binder = new Binder<>(presenter, view);
   }
 
-  @Override protected void onResume() {
-    super.onResume();
+  @Override protected void onStart() {
+    super.onStart();
     if (binder != null) {
       binder.bind();
     }
   }
 
-  @Override protected void onPause() {
-    super.onPause();
+  @Override protected void onStop() {
+    super.onStop();
     if (binder != null) {
       binder.unbind();
     }
