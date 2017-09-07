@@ -20,7 +20,7 @@
   - [Name]Fragment -> Fragment (e.g. LoginFragment)
 
 ### Dependencies Injection
-1. **ButterKnife** first
+#### 1. ButterKnife first
 
   Butter knife can resolve most of references from the *R* (e.g. id, color, string. etc)
   
@@ -45,9 +45,9 @@
   @OnClick(R.id.btLogin) public void onLoginClicked() { ... }
   ~~~
 
-2. **Extras** second
+#### 2. Extras second
 
-3. **Dagger** third
+#### 3. Dagger third
 
 - *AppComponent.plus* to creat sub-component
 - *AnyComponent.inject* to inject dependencies
@@ -108,8 +108,3 @@ public class ActivityTemplate extends AppCompatActivity implement ActivityInject
   }
 }
 ~~~
-
-# Problems
-
-- 1 activity have many presenters (e.g. many
-- all presenters need to call destroy when activity.onDestroy()
