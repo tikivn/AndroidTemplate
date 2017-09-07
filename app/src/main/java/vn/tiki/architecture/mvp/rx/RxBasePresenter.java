@@ -11,29 +11,14 @@ import vn.tiki.architecture.mvp.Mvp;
  */
 
 public class RxBasePresenter<V extends Mvp.View> extends BasePresenter<V> {
-  private CompositeDisposable disposeOnDetachDisposables = new CompositeDisposable();
   private CompositeDisposable disposeOnDestroyDisposables = new CompositeDisposable();
 
-  public void disposeOnDetach(Disposable... disposables) {
-    if (disposables.length == 1) {
-      disposeOnDetachDisposables.add(disposables[0]);
-    } else if (disposables.length > 1) {
-      disposeOnDetachDisposables.addAll(disposables);
-    }
-  }
-
-  public void disposeOnDestroy(Disposable... disposables) {
+  protected void disposeOnDestroy(Disposable... disposables) {
     if (disposables.length == 1) {
       disposeOnDestroyDisposables.add(disposables[0]);
     } else if (disposables.length > 1) {
       disposeOnDestroyDisposables.addAll(disposables);
     }
-  }
-
-  @CallSuper
-  @Override public void detach() {
-    disposeOnDetachDisposables.clear();
-    super.detach();
   }
 
   @CallSuper

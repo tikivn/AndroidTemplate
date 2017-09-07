@@ -13,6 +13,12 @@ public class MvpFragment<V extends Mvp.View, P extends Mvp.Presenter<V>> extends
 
   @Nullable Binder<V, P> binder;
 
+  /**
+   * Connect Presenter to View then Presenter will attach/detach view and destroy base on lifecycle.
+   * NOTE: this must be called before {@link Fragment#onViewCreated(View, Bundle)} method.
+   * @param presenter the Presenter
+   * @param view the View
+   */
   public void connect(P presenter, V view) {
     binder = new Binder<>(presenter, view);
   }
