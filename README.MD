@@ -47,6 +47,67 @@
 
 2. **Extras** second
 
+3. **Dagger** third
+
+- *AppComponent.plus* to creat sub-component
+- *AnyComponent.inject* to inject dependencies
+- *AppInjector* must be implemented by Application
+- *ActivityInjector* must be implemented by Activity
+- *Daggers.inject(Context, Object)* is alternative to `ActivityComponent.inject(Object)`
+- *Daggers.inject(Context.getApplicationContext(), Object)* is alternative to `AppComponent.inject(Object)`
+
+App Template
+
+~~~java
+[App.java]
+
+public class App extends Application implements AppInjector {
+  private AppComponent appComponent;
+
+  @Override public void onCreate() {
+    super.onCreate();
+    
+    // Create AppComponent first
+    appComponent = DaggerAppComponent.builder()
+        .appModule(new AppModule())
+        .build();
+        
+    // Install AppInjector
+    Daggers.installAppInjector(this);
+    registerActivityLifecycleCallbacks(new SimpleActivityLifecycleCallbacks() {
+      @Override public void onActivityCreated(Activity activity, Bundle bundle) {
+        if (activity instanceof ActivityInjector) {
+          Daggers.installActivityInjector((ActivityInjector) activity);
+        }
+      }
+
+      @Override public void onActivityDestroyed(Activity activity) {
+        if (activity instanceof ActivityInjector) {
+          Daggers.uninstallActivityInjector((ActivityInjector) activity);
+        }
+      }
+    });
+  }
+  
+  @Override public Object appComponent() {
+    return appComponent;
+  }
+}
+~~~
+
+Activity template
+
+~~~java
+public class ActivityTemplate extends AppCompatActivity implement ActivityInjector {
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    
+    // Inject dependencies.
+    Daggers.inject(this, this);
+  }
+}
+~~~
 
 # Problems
 

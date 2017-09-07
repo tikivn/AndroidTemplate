@@ -24,12 +24,14 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import java.util.List;
 import javax.inject.Inject;
-import vn.tiki.architecture.App;
 import vn.tiki.architecture.R;
+import vn.tiki.architecture.dagger.ActivityInjector;
+import vn.tiki.architecture.dagger.Daggers;
 import vn.tiki.architecture.mvp.MvpActivity;
 import vn.tiki.architecture.util.NetworkUtil;
 
-public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implements LoginView {
+public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implements
+    ActivityInjector, LoginView {
 
   private static final ButterKnife.Setter<View, Boolean> ENABLE =
       new ButterKnife.Setter<View, Boolean>() {
@@ -65,17 +67,19 @@ public class LoginActivity extends MvpActivity<LoginView, LoginPresenter> implem
     return new Intent(context, LoginActivity.class);
   }
 
+  @Override public Object activityModule() {
+    return new LoginModule();
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    System.out.println("savedInstanceState = [" + savedInstanceState + "]");
     setContentView(R.layout.activity_login);
     ButterKnife.bind(this);
+    Daggers.inject(this, this);
 
-    App.from(this)
-        .getAppComponent()
-        .plus(new LoginModule())
-        .inject(this);
-
+    System.out.println(presenter);
     connect(presenter, this);
   }
 

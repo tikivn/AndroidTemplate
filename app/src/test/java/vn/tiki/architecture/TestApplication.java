@@ -16,9 +16,11 @@ public class TestApplication extends App {
     mockedAppComponent = DaggerAppComponent.builder()
         .appModule(appModule)
         .build();
+
+    setupDagger();
   }
 
-  @Override public AppComponent getAppComponent() {
+  @Override public Object appComponent() {
     return mockedAppComponent;
   }
 }
